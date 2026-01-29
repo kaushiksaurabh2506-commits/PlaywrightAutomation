@@ -1,62 +1,50 @@
-import { defineConfig, devices } from '@playwright/test';
+import { defineConfig } from '@playwright/test';
 
 export default defineConfig({
-
   testDir: './tests',
 
-  /* Run tests sequentially (best for debugging) */
+  // If you want sequential execution (no parallel)
   fullyParallel: false,
-
-  /* Fail build if test.only left */
-  forbidOnly: !!process.env.CI,
-
-  /* Retry on CI only */
-  retries: process.env.CI ? 2 : 0,
-
-  /* Single worker to avoid multiple browsers */
   workers: 1,
 
-  /* Reporter */
-  reporter: 'html',
+  // CI safety
+  forbidOnly: !!process.env.CI,
+  retries: process.env.CI ? 2 : 0,
 
-  /* Global settings */
-  use: {
+  // Timeouts (good defaults)
+  timeout: 60_000,
+  expect: { timeout: 10_000 },
 
-    headless: false,        // 👈 Force browser visible
-    //slowMo: 300,            // 👈 Optional (see steps slowly)
-    trace: 'on-first-retry'
-
-  },
-
-  /* Browser projects */
-  projects: [
-
-    {
-      name: 'chromium',
-      use: {
-        ...devices['Desktop Chrome'],
-        headless: false     // 👈 IMPORTANT (prevents override)
-      },
-    },
-
-    // Uncomment if needed later
-
-    // {
-    //   name: 'firefox',
-    //   use: { 
-    //     ...devices['Desktop Firefox'],
-    //     headless: false 
-    //   },
-    // },
-
-    // {
-    //   name: 'webkit',
-    //   use: { 
-    //     ...devices['Desktop Safari'],
-    //     headless: false 
-    //   },
-    // },
-
+  // ✅ Always open the HTML report after execution
+  reporter: [
+    ['html', { open: 'always' }],
   ],
 
+  use: {
+    headless: false,               // ✅ visible browser always
+    viewport: null,                // ✅ allows real window sizing (needed for maximize)
+    actionTimeout: 15_000,
+    navigationTimeout: 45_000,
+    trace: 'on',
+    screenshot: 'on',
+    video: 'on',
+
+    // ✅ Maximize Chrome
+    launchOptions: {
+      args: ['--start-maximized'],
+    },
+
+    // Optional: if you use baseURL in tests like page.goto('/')
+    // baseURL: 'https://example.com',
+  },
+
+  projects: [
+    {
+      name: 'chrome',
+      use: {
+        browserName: 'chromium',
+        channel: 'chrome',         // ✅ runs real Google Chrome (not bundled chromium)
+      },
+    },
+  ],
 });
