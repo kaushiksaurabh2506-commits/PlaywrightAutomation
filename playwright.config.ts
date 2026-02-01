@@ -28,6 +28,7 @@ export default defineConfig({
     trace: 'on',
     screenshot: 'on',
     video: 'on',
+    permissions: [],
 
     // ✅ Maximize Chrome
     launchOptions: {

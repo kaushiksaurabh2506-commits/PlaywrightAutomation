@@ -1,10 +1,6 @@
 import {test,expect} from '@playwright/test';
 
-test('Book Movie Ticket in PVR Cinemas',async ({browser}) => {
-
-
-    const context = await browser.newContext({permissions: []});
-    const page = await context.newPage();
+test('Book Movie Ticket in PVR Cinemas',async ({page}) => {
 
     //Launch the browser
     await page.goto('https://www.pvrcinemas.com/');
@@ -23,7 +19,7 @@ test('Book Movie Ticket in PVR Cinemas',async ({browser}) => {
     await page.locator(`ul.p-dropdown-items li.p-dropdown-item`, {hasText: 'INOX National,Virugambakkam Chennai'}).click();
     await page.locator(`ul.p-dropdown-items li.p-dropdown-item`, {hasText: 'Today'}).click();
     await page.locator(`ul.p-dropdown-items li.p-dropdown-item`, {hasText: 'BORDER 2'}).click();
-    await page.locator(`ul.p-dropdown-items li.p-dropdown-item`).first().click();
+    await page.locator(`ul.p-dropdown-items li.p-dropdown-item`).nth(1).click();
 
     //Click on Book
     await page.locator(`//button[@type='submit']`).click();
